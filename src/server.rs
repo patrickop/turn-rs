@@ -41,11 +41,11 @@ impl ServerHandle {
         self.shutdown_tx.send(()).map(|_| ())
     }
     
-    /// Check if the server is still running (any task still active)
-    pub fn is_running(&self) -> bool {
-        !self.handles.iter().all(|h| h.is_finished())
+    /// Check if the server is still running (all tasks are active)
+    pub fn all_tasks_running(&self) -> bool {
+        self.handles.iter().all(|h| !h.is_finished())
     }
-    
+
     /// Wait for all server tasks to complete
     pub async fn wait_for_shutdown(self) -> Result<(), tokio::task::JoinError> {
         for handle in self.handles {
